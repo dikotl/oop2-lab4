@@ -1,11 +1,12 @@
-using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using ServiceMarketplace.Models;
 
 namespace ServiceMarketplace.Services;
 
-public class DataBaseService(DialogService dialogService)
+public class DataBaseException(string message) : Exception(message);
+
+public class DataBaseService
 {
     // JSON database serialization options, created once and used each time we're saving the database.
     private static readonly JsonSerializerOptions _serializerOptions = new()
@@ -14,9 +15,7 @@ public class DataBaseService(DialogService dialogService)
         WriteIndented = true,
     };
 
-    private DialogService _dialogService = dialogService;
-
-    public DataBase? Load()
+    public DataBase? Load(DialogService _)
     {
         // TODO: move to DialogService.
         var dialog = new Microsoft.Win32.OpenFileDialog()
@@ -36,20 +35,15 @@ public class DataBaseService(DialogService dialogService)
     {
         try
         {
-            return JsonSerializer.Deserialize<DataBase>(json);
+            return JsonSerializer.Deserialize<DataBase>(json, _serializerOptions);
         }
         catch (Exception e) when (e is JsonException or NotSupportedException)
         {
-            Debug.WriteLine($"JSON deserialization error: {e.Message}");
-            _dialogService.ShowError(
-                "Database cannot be loaded properly, it might be corrupted",
-                "Cannot load the database"
-            );
+            throw new DataBaseException($"JSON deserialization error: {e.Message}");
         }
-        return null;
     }
 
-    public static void Save(DataBase db)
+    public void Save(DataBase db, DialogService _)
     {
         // TODO: move to DialogService.
         var dialog = new Microsoft.Win32.SaveFileDialog()
@@ -64,14 +58,14 @@ public class DataBaseService(DialogService dialogService)
         }
     }
 
-    public static void Save(DataBase db, string filename)
+    public void Save(DataBase db, string filename)
     {
         using var file = File.OpenWrite(filename);
         using var writer = new StreamWriter(file);
         Save(db, writer);
     }
 
-    public static void Save(DataBase db, StreamWriter stream)
+    public void Save(DataBase db, StreamWriter stream)
     {
         var json = JsonSerializer.Serialize(db, _serializerOptions);
         stream.Write(json);

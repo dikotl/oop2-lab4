@@ -1,7 +1,3 @@
 namespace ServiceMarketplace.Models;
 
-public record DataBase(
-    IList<ServiceBureau> ServiceCenters,
-    IList<Customer> Clients,
-    IList<Executor> Executors
-);
+public record DataBase(IList<ServiceBureau> Bureaus, IList<string> AddressHistory);

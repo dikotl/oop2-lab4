@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 using ServiceMarketplace.Models;
 using ServiceMarketplace.Services;
 
@@ -7,15 +6,16 @@ namespace ServiceMarketplace.ViewModels;
 
 public class MainViewModel : BaseViewModel
 {
+    public static OrderStatus[] OrderStatuses => Enum.GetValues<OrderStatus>();
+
     // Dependencies.
     private readonly DialogService _dialogService = new();
+    private readonly DataBaseService _dbService = new();
     private static readonly ServiceBureau _dummyBureauForNewOnes = new("(new bureau)");
 
     // Fix for situation when after hitting "Create" in "New Bureau" window it reopens.
     // Dumb but works.
     private bool _creatingNewBureau = false;
-
-    public static OrderStatus[] OrderStatuses => Enum.GetValues<OrderStatus>();
 
     public ObservableCollection<ServiceBureau> Bureaus
     {
@@ -73,61 +73,90 @@ public class MainViewModel : BaseViewModel
         set { field = value; OnPropertyChanged(); }
     }
 
-    public ICommand AddOrderCommand { get; }
-    public ICommand AddExecutorCommand { get; }
-    public ICommand ViewDetailsCommand { get; }
-    public ICommand ToggleViewCommand { get; }
-    public ICommand BureauDetailsCommand { get; }
+    public RelayCommand AddOrderCommand { get; }
+    public RelayCommand AddExecutorCommand { get; }
+    public RelayCommand ViewDetailsCommand { get; }
+    public RelayCommand ToggleViewCommand { get; }
+    public RelayCommand BureauDetailsCommand { get; }
+    public RelayCommand SaveDataBaseCommand { get; }
+    public RelayCommand LoadDataBaseCommand { get; }
 
     public MainViewModel()
     {
-        AddOrderCommand = new RelayCommand(ExecuteAddOrder, _ => SelectedBureau is not null);
-        AddExecutorCommand = new RelayCommand(ExecuteAddExecutor, _ => SelectedBureau is not null);
-        ViewDetailsCommand = new RelayCommand(ExecuteViewDetailsExecutor, _ => SelectedBureau is not null && SelectedOrder is not null);
-        ToggleViewCommand = new RelayCommand(ExecuteToggleView, _ => SelectedBureau is not null);
-        BureauDetailsCommand = new RelayCommand(ExecuteViewBureauDetails, _ => SelectedBureau is not null);
-    }
-
-    private void ExecuteAddOrder(object? parameter)
-    {
-        if (_dialogService.OpenAddOrderDialog(SelectedBureau!.Staff!, AddressHistory) is Order newOrder)
+        AddOrderCommand = new(_ =>
         {
-            SelectedBureau!.Orders!.Add(newOrder);
-        }
-    }
+            if (_dialogService.OpenAddOrderDialog(SelectedBureau!.Staff!, AddressHistory) is Order newOrder)
+            {
+                SelectedBureau!.Orders!.Add(newOrder);
+            }
+        }, _ => SelectedBureau is not null);
 
-    private void ExecuteAddExecutor(object? parameter)
-    {
-        if (_dialogService.OpenAddExecutorDialog() is Executor newExecutor)
+        AddExecutorCommand = new(_ =>
         {
-            SelectedBureau!.Staff!.Add(newExecutor);
-        }
-    }
+            if (_dialogService.OpenAddExecutorDialog() is Executor newExecutor)
+            {
+                SelectedBureau!.Staff!.Add(newExecutor);
+            }
+        }, _ => SelectedBureau is not null);
 
-    private void ExecuteViewDetailsExecutor(object? _)
-    {
-        _dialogService.OpenViewDetailsDialog(SelectedOrder!);
-    }
-
-    private void ExecuteToggleView(object? parameter)
-    {
-        IsViewingExecutors = !IsViewingExecutors;
-    }
-
-    private void ExecuteViewBureauDetails(object? _)
-    {
-        var bureau = SelectedBureau!;
-        int staffCount = bureau.Staff?.Count ?? 0;
-        int ordersCount = bureau.Orders?.Count ?? 0;
-        decimal totalRevenue = bureau.Orders?.Sum(o => o.Cost) ?? 0;
-
-        // TODO: move to DialogService.
-        System.Windows.MessageBox.Show(
-            $"Total Staff: {staffCount}\n" +
-            $"Total Orders: {ordersCount}\n" +
-            $"Total Revenue: ${totalRevenue}",
-            $"'{bureau.Name}' Bureau Details",
-            System.Windows.MessageBoxButton.OK
+        ViewDetailsCommand = new(
+            _ => _dialogService.OpenViewDetailsDialog(SelectedOrder!),
+            _ => SelectedBureau is not null && SelectedOrder is not null
         );
+
+        ToggleViewCommand = new(
+            _ => IsViewingExecutors = !IsViewingExecutors,
+            _ => SelectedBureau is not null
+        );
+
+        BureauDetailsCommand = new(_ =>
+        {
+            var bureau = SelectedBureau!;
+            int staffCount = bureau.Staff?.Count ?? 0;
+            int ordersCount = bureau.Orders?.Count ?? 0;
+            int createdOrdersCount = bureau.Orders?.Count(o => o.Status == OrderStatus.Created) ?? 0;
+            int inProgressOrdersCount = bureau.Orders?.Count(o => o.Status == OrderStatus.InProgress) ?? 0;
+            int completedOrdersCount = bureau.Orders?.Count(o => o.Status == OrderStatus.Completed) ?? 0;
+            decimal totalRevenue = bureau.Orders?.Sum(o => o.Cost) ?? 0;
+
+            // TODO: move to DialogService.
+            System.Windows.MessageBox.Show(
+                $"Total Staff: {staffCount}\n" +
+                $"Total Orders: {ordersCount}\n" +
+                $" - Just created: {createdOrdersCount}\n" +
+                $" - In progress: {inProgressOrdersCount}\n" +
+                $" - Completed: {completedOrdersCount}\n" +
+                $"Total Revenue: ${totalRevenue}",
+                $"'{bureau.Name}' Bureau Details",
+                System.Windows.MessageBoxButton.OK
+            );
+        }, _ => SelectedBureau is not null);
+
+        SaveDataBaseCommand = new(_ =>
+        {
+            // Remove dummy bureau.
+            var bureaus = Bureaus.ToList()[..^1];
+            _dbService.Save(new(bureaus, AddressHistory), _dialogService);
+        });
+
+        LoadDataBaseCommand = new(_ =>
+        {
+            try
+            {
+                if (_dbService.Load(_dialogService) is DataBase db)
+                {
+                    Bureaus = [.. db.Bureaus, _dummyBureauForNewOnes];
+                    AddressHistory = [.. db.AddressHistory];
+                    OnPropertyChanged(nameof(Bureaus));
+                }
+            }
+            catch (DataBaseException e)
+            {
+                _dialogService.ShowError(
+                    "Database cannot be loaded properly, it might be corrupted.\n\n" + e.Message,
+                    "Cannot load the database"
+                );
+            }
+        });
     }
 }

@@ -32,6 +32,8 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <TextBlock
@@ -139,6 +141,21 @@
                     </Style>
                 </Button.Style>
             </Button>
+
+            <Button
+                Content="Load DataBase"
+                Command="{Binding LoadDataBaseCommand}"
+                Background="#fff3cd"
+                Width="100"
+                Height="30"
+                Margin="0,0,10,0"/>
+
+            <Button
+                Content="Save DataBase"
+                Command="{Binding SaveDataBaseCommand}"
+                Background="#d4edda"
+                Width="100"
+                Height="30"/>
 
         </StackPanel>
 
