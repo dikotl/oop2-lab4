@@ -32,7 +32,6 @@ public class MainViewModel : BaseViewModel
             if (value == _dummyBureauForNewOnes && !_creatingNewBureau)
             {
                 _creatingNewBureau = true;
-                // TODO: disallow duplicate bureau names.
                 if (_dialogService.OpenCreateBureauDialog(Bureaus) is ServiceBureau newBureau)
                 {
                     // Insert it right before the "... create new" dummy item.
