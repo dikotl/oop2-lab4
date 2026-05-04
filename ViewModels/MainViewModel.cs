@@ -112,15 +112,12 @@ public class MainViewModel : BaseViewModel
         }, _ => SelectedBureau is not null);
 
         EditOrderCommand = new(
-            _ =>
-            {
-                _dialogService.OpenEditOrderDialog(SelectedOrder!, SelectedBureau!.Staff!, AddressHistory);
-            },
+            _ => _dialogService.OpenEditOrderDialog(SelectedOrder!, SelectedBureau!.Staff!, AddressHistory),
             _ => SelectedBureau is not null && SelectedOrder is not null
         );
 
         EditExecutorCommand = new(
-            _ => { },
+            _ => _dialogService.OpenEditExecutorDialog(SelectedExecutor!),
             _ => IsViewingExecutors && SelectedBureau is not null && SelectedExecutor is not null
         );
 

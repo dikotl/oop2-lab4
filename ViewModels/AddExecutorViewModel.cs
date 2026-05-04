@@ -50,7 +50,12 @@ public class AddExecutorViewModel : BaseViewModel
 
     private void Create(object? obj)
     {
-        CreatedExecutor = new Executor(FirstName, LastName, DateOnly.FromDateTime(DateOfBirth));
+        CreatedExecutor = new Executor
+        {
+            FirstName = FirstName,
+            LastName = LastName,
+            Birthday = DateOnly.FromDateTime(DateOfBirth),
+        };
         CloseAction?.Invoke(true);
     }
 

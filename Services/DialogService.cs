@@ -43,6 +43,14 @@ public class DialogService
         return null;
     }
 
+    internal bool OpenEditExecutorDialog(Executor originalExecutor)
+    {
+        var vm = new EditExecutorViewModel(originalExecutor);
+        var dialog = new EditExecutorWindow() { DataContext = vm };
+
+        return dialog.ShowDialog() is true;
+    }
+
     public ServiceBureau? OpenCreateBureauDialog(IList<ServiceBureau> bureaus)
     {
         var vm = new AddBureauViewModel(bureaus);
