@@ -21,6 +21,14 @@ public class DialogService
         return null;
     }
 
+    public bool OpenEditOrderDialog(Order originalOrder, IList<Executor> executors, IList<string> addresses)
+    {
+        var vm = new EditOrderViewModel(originalOrder, executors, addresses);
+        var dialog = new EditOrderWindow() { DataContext = vm };
+
+        return dialog.ShowDialog() is true;
+    }
+
     public Executor? OpenAddExecutorDialog()
     {
         var vm = new AddExecutorViewModel();

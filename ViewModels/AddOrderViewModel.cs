@@ -58,14 +58,15 @@ public class AddOrderViewModel : BaseViewModel
 
     private void Create(object? obj)
     {
-        CreatedOrder = new Order(
-            SelectedExecutor!,
-            SelectedService,
-            CustomerAddress,
-            DateTime.Now,
-            OrderStatus.Created,
-            Cost
-        );
+        CreatedOrder = new Order()
+        {
+            Executor = SelectedExecutor!,
+            Service = SelectedService,
+            Address = CustomerAddress,
+            CreationDate = DateTime.Now,
+            Status = OrderStatus.JustCreated,
+            Cost = Cost,
+        };
         CloseAction?.Invoke(true);
     }
 

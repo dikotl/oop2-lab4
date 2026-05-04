@@ -75,6 +75,8 @@ public class MainViewModel : BaseViewModel
 
     public RelayCommand AddOrderCommand { get; }
     public RelayCommand AddExecutorCommand { get; }
+    public RelayCommand EditOrderCommand { get; }
+    public RelayCommand EditExecutorCommand { get; }
     public RelayCommand ViewDetailsCommand { get; }
     public RelayCommand ToggleViewCommand { get; }
     public RelayCommand BureauDetailsCommand { get; }
@@ -98,6 +100,19 @@ public class MainViewModel : BaseViewModel
                 SelectedBureau!.Staff!.Add(newExecutor);
             }
         }, _ => SelectedBureau is not null);
+
+        EditOrderCommand = new(
+            _ =>
+            {
+                _dialogService.OpenEditOrderDialog(SelectedOrder!, SelectedBureau!.Staff!, AddressHistory);
+            },
+            _ => SelectedBureau is not null && SelectedOrder is not null
+        );
+
+        EditExecutorCommand = new(
+            _ => { },
+            _ => SelectedBureau is not null && SelectedOrder is not null
+        );
 
         ViewDetailsCommand = new(
             _ => _dialogService.OpenViewDetailsDialog(SelectedOrder!),

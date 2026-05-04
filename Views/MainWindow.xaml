@@ -22,6 +22,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -91,6 +92,27 @@
             </Button>
 
             <Button
+                Content="Import JSON"
+                Command="{Binding LoadDataBaseCommand}"
+                Background="#fff3cd"
+                Width="100"
+                Height="30"
+                Margin="0,0,10,0"/>
+
+            <Button
+                Content="Export JSON"
+                Command="{Binding SaveDataBaseCommand}"
+                Background="#d4edda"
+                Width="100"
+                Height="30"/>
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="2"
+            Orientation="Horizontal"
+            Margin="0,0,0,15">
+
+            <Button
                 Width="100"
                 Height="30"
                 Margin="0,0,10,0">
@@ -112,6 +134,34 @@
                                 <Setter
                                     Property="Command"
                                     Value="{Binding AddExecutorCommand}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <Button
+                Width="100"
+                Height="30"
+                Margin="0,0,10,0">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter
+                            Property="Content"
+                            Value="Edit Order"/>
+                        <Setter
+                            Property="Command"
+                            Value="{Binding EditOrderCommand}"/>
+                        <Style.Triggers>
+                            <DataTrigger
+                                Binding="{Binding IsViewingExecutors}"
+                                Value="True">
+                                <Setter
+                                    Property="Content"
+                                    Value="Edit Executor"/>
+                                <Setter
+                                    Property="Command"
+                                    Value="{Binding EditExecutorCommand}"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -141,26 +191,10 @@
                     </Style>
                 </Button.Style>
             </Button>
-
-            <Button
-                Content="Load DataBase"
-                Command="{Binding LoadDataBaseCommand}"
-                Background="#fff3cd"
-                Width="100"
-                Height="30"
-                Margin="0,0,10,0"/>
-
-            <Button
-                Content="Save DataBase"
-                Command="{Binding SaveDataBaseCommand}"
-                Background="#d4edda"
-                Width="100"
-                Height="30"/>
-
         </StackPanel>
 
         <ListView
-            Grid.Row="2"
+            Grid.Row="3"
             ItemsSource="{Binding SelectedBureau.Orders}"
             SelectedItem="{Binding SelectedOrder}"
             SelectionMode="Single">
@@ -262,7 +296,7 @@
         </ListView>
 
         <ListView
-            Grid.Row="2"
+            Grid.Row="3"
             ItemsSource="{Binding SelectedBureau.Staff}">
             <ListView.Style>
                 <Style TargetType="ListView">
