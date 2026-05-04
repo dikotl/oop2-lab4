@@ -6,7 +6,7 @@ namespace ServiceMarketplace.Models;
 
 public enum OrderStatus
 {
-    Created,
+    JustCreated,
     InProgress,
     Completed,
 }

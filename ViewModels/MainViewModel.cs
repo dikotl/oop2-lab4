@@ -133,7 +133,7 @@ public class MainViewModel : BaseViewModel
             var bureau = SelectedBureau!;
             int staffCount = bureau.Staff?.Count ?? 0;
             int ordersCount = bureau.Orders?.Count ?? 0;
-            int createdOrdersCount = bureau.Orders?.Count(o => o.Status == OrderStatus.Created) ?? 0;
+            int createdOrdersCount = bureau.Orders?.Count(o => o.Status == OrderStatus.JustCreated) ?? 0;
             int inProgressOrdersCount = bureau.Orders?.Count(o => o.Status == OrderStatus.InProgress) ?? 0;
             int completedOrdersCount = bureau.Orders?.Count(o => o.Status == OrderStatus.Completed) ?? 0;
             decimal totalRevenue = bureau.Orders?.Sum(o => o.Cost) ?? 0;
