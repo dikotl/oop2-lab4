@@ -297,7 +297,10 @@
 
         <ListView
             Grid.Row="3"
-            ItemsSource="{Binding SelectedBureau.Staff}">
+            ItemsSource="{Binding SelectedBureau.Staff}"
+            SelectedItem="{Binding SelectedExecutor}"
+            SelectionMode="Single">
+
             <ListView.Style>
                 <Style TargetType="ListView">
                     <Setter

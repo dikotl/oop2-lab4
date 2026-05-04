@@ -71,6 +71,12 @@ public class MainViewModel : BaseViewModel
         set { field = value; OnPropertyChanged(); }
     }
 
+    public Executor? SelectedExecutor
+    {
+        get;
+        set { field = value; OnPropertyChanged(); }
+    }
+
     public bool IsViewingExecutors
     {
         get;
@@ -115,7 +121,7 @@ public class MainViewModel : BaseViewModel
 
         EditExecutorCommand = new(
             _ => { },
-            _ => SelectedBureau is not null && SelectedOrder is not null
+            _ => IsViewingExecutors && SelectedBureau is not null && SelectedExecutor is not null
         );
 
         ViewDetailsCommand = new(
