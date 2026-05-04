@@ -63,7 +63,7 @@ public class MainViewModel : BaseViewModel
     {
         get;
         set { field = value; OnPropertyChanged(); }
-    } = ["New York, IDK street, 30"];
+    } = [];
 
     public Order? SelectedOrder
     {
