@@ -34,11 +34,16 @@ public class MainViewModel : BaseViewModel
                 _creatingNewBureau = true;
                 if (_dialogService.OpenCreateBureauDialog(Bureaus) is ServiceBureau newBureau)
                 {
-                    // Insert it right before the "... create new" dummy item.
+                    // Insert it right before the "(new bureau)" dummy item.
                     Bureaus.Insert(Bureaus.Count - 1, newBureau);
 
                     // Select the newly created bureau.
                     field = newBureau;
+                }
+                else
+                {
+                    // If dialog was canceled, reset selection.
+                    field = null;
                 }
                 _creatingNewBureau = false;
             }
