@@ -87,6 +87,8 @@ public class MainViewModel : BaseViewModel
     public RelayCommand AddExecutorCommand { get; }
     public RelayCommand EditOrderCommand { get; }
     public RelayCommand EditExecutorCommand { get; }
+    public RelayCommand DeleteOrderCommand { get; }
+    public RelayCommand DeleteExecutorCommand { get; }
     public RelayCommand ViewDetailsCommand { get; }
     public RelayCommand ToggleViewCommand { get; }
     public RelayCommand BureauDetailsCommand { get; }
@@ -118,6 +120,22 @@ public class MainViewModel : BaseViewModel
 
         EditExecutorCommand = new(
             _ => _dialogService.OpenEditExecutorDialog(SelectedExecutor!),
+            _ => IsViewingExecutors && SelectedBureau is not null && SelectedExecutor is not null
+        );
+
+        DeleteOrderCommand = new(
+            _ => _dialogService.OpenConfirmationDialog(
+                "Are you sure you want delete this executor?",
+                () => SelectedBureau!.Orders.Remove(SelectedOrder!)
+            ),
+            _ => !IsViewingExecutors && SelectedBureau is not null && SelectedOrder is not null
+        );
+
+        DeleteExecutorCommand = new(
+            _ => _dialogService.OpenConfirmationDialog(
+                "Are you sure you want delete this order?",
+                () => SelectedBureau!.Staff.Remove(SelectedExecutor!)
+            ),
             _ => IsViewingExecutors && SelectedBureau is not null && SelectedExecutor is not null
         );
 

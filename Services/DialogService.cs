@@ -65,6 +65,14 @@ public class DialogService
         return null;
     }
 
+    public bool OpenConfirmationDialog(string text, Action ifConfirmed)
+    {
+        var vm = new ConfirmationViewModel(text, ifConfirmed);
+        var dialog = new ConfirmationWindow() { DataContext = vm };
+
+        return dialog.ShowDialog() is true;
+    }
+
     public void OpenViewDetailsDialog(Order order)
     {
         MessageBox.Show(
