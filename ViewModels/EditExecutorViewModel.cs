@@ -13,8 +13,8 @@ public class EditExecutorViewModel : BaseViewModel
     }
 
     public Action<bool>? CloseAction { get; set; }
-    public RelayCommand SaveCommand { get; }
-    public RelayCommand CancelCommand { get; }
+    public Command SaveCommand { get; }
+    public Command CancelCommand { get; }
 
     public EditExecutorViewModel(Executor originalExecutor)
     {
@@ -25,8 +25,8 @@ public class EditExecutorViewModel : BaseViewModel
             LastName = originalExecutor.LastName,
         };
 
-        SaveCommand = new RelayCommand(Save, _ => !NewExecutor.HasErrors);
-        CancelCommand = new RelayCommand(Cancel);
+        SaveCommand = new Command(Save, _ => !NewExecutor.HasErrors);
+        CancelCommand = new Command(Cancel);
     }
 
     private void Save(object? _)

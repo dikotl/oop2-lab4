@@ -28,8 +28,8 @@ public class AddBureauViewModel : BaseViewModel
     {
         ExistingBureaus = existingBureaus;
         BureauName = "Unnamed";
-        CreateCommand = new RelayCommand(Create, _ => !HasErrors);
-        CancelCommand = new RelayCommand(Cancel);
+        CreateCommand = new Command(Create, _ => !HasErrors);
+        CancelCommand = new Command(Cancel);
     }
 
     private void Create(object? _)

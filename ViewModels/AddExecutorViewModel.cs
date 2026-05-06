@@ -44,8 +44,8 @@ public class AddExecutorViewModel : BaseViewModel
         LastName = "";
         DateOfBirth = DateTime.Now.AddYears(-30);
 
-        CreateCommand = new RelayCommand(Create, _ => !HasErrors);
-        CancelCommand = new RelayCommand(Cancel);
+        CreateCommand = new Command(Create, _ => !HasErrors);
+        CancelCommand = new Command(Cancel);
     }
 
     private void Create(object? obj)

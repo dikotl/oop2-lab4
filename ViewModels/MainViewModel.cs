@@ -83,17 +83,17 @@ public class MainViewModel : BaseViewModel
         set { field = value; OnPropertyChanged(); }
     }
 
-    public RelayCommand AddOrderCommand { get; }
-    public RelayCommand AddExecutorCommand { get; }
-    public RelayCommand EditOrderCommand { get; }
-    public RelayCommand EditExecutorCommand { get; }
-    public RelayCommand DeleteOrderCommand { get; }
-    public RelayCommand DeleteExecutorCommand { get; }
-    public RelayCommand ViewDetailsCommand { get; }
-    public RelayCommand ToggleViewCommand { get; }
-    public RelayCommand BureauDetailsCommand { get; }
-    public RelayCommand SaveDataBaseCommand { get; }
-    public RelayCommand LoadDataBaseCommand { get; }
+    public Command AddOrderCommand { get; }
+    public Command AddExecutorCommand { get; }
+    public Command EditOrderCommand { get; }
+    public Command EditExecutorCommand { get; }
+    public Command DeleteOrderCommand { get; }
+    public Command DeleteExecutorCommand { get; }
+    public Command ViewDetailsCommand { get; }
+    public Command ToggleViewCommand { get; }
+    public Command BureauDetailsCommand { get; }
+    public Command SaveDataBaseCommand { get; }
+    public Command LoadDataBaseCommand { get; }
 
     public MainViewModel()
     {

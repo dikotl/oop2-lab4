@@ -5,7 +5,7 @@ public class ConfirmationViewModel : BaseViewModel
     public string Text { get; }
 
     public Action<bool>? CloseAction { get; set; }
-    public RelayCommand YesCommand { get; }
+    public Command YesCommand { get; }
 
     public ConfirmationViewModel(string text, Action ifConfirmed)
     {

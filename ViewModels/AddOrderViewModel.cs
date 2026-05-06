@@ -52,8 +52,8 @@ public class AddOrderViewModel : BaseViewModel
         AvailableExecutors = executors;
         AvailableAddresses = addresses;
 
-        CreateCommand = new RelayCommand(Create, _ => !HasErrors);
-        CancelCommand = new RelayCommand(Cancel);
+        CreateCommand = new Command(Create, _ => !HasErrors);
+        CancelCommand = new Command(Cancel);
     }
 
     private void Create(object? obj)

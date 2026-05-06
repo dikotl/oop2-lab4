@@ -3,7 +3,7 @@ using System.Windows.Input;
 namespace ServiceMarketplace.ViewModels;
 
 // A reusable command class that routes actions from the View to the ViewModel.
-public record RelayCommand(Action<object?> Action, Predicate<object?>? Predicate = null) : ICommand
+public record Command(Action<object?> Action, Predicate<object?>? Predicate = null) : ICommand
 {
     bool ICommand.CanExecute(object? parameter) => Predicate is null || Predicate(parameter);
     void ICommand.Execute(object? parameter) => Action(parameter);

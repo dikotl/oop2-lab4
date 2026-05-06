@@ -12,8 +12,8 @@ public class EditOrderViewModel : BaseViewModel
     public EditOrderData NewOrder { get; }
 
     public Action<bool>? CloseAction { get; set; }
-    public RelayCommand SaveCommand { get; }
-    public RelayCommand CancelCommand { get; }
+    public Command SaveCommand { get; }
+    public Command CancelCommand { get; }
 
     public EditOrderViewModel(Order originalOrder, IList<Executor> executors, IList<string> addresses)
     {
@@ -28,8 +28,8 @@ public class EditOrderViewModel : BaseViewModel
             Cost = originalOrder.Cost
         };
 
-        SaveCommand = new RelayCommand(Save, _ => !NewOrder.HasErrors);
-        CancelCommand = new RelayCommand(Cancel);
+        SaveCommand = new Command(Save, _ => !NewOrder.HasErrors);
+        CancelCommand = new Command(Cancel);
     }
 
     private void Save(object? _)
